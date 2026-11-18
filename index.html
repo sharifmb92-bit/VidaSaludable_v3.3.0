@@ -1,0 +1,2046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vida Saludable_v 3.3.0</title>
+    
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#10b981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/svg+xml" href="./icon.svg">
+    <link rel="apple-touch-icon" href="./icon.svg">
+
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --accent: #10b981;  
+            --accent-hover: #059669;
+            --orange: #f97316;
+            --orange-hover: #ea580c;
+            --purple: #8b5cf6;
+            --bg: #f8fafc; 
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --subtext: #64748b;
+            --border: #e2e8f0;
+            --soft-blue: #3b82f6;
+            --danger: #ef4444;
+            --warning-bg: #fff7ed;
+            --radius: 20px;
+        }
+
+        [data-theme="dark"] {
+            --primary: #020617;
+            --accent: #10b981;
+            --accent-hover: #34d399;
+            --orange: #fb923c;
+            --orange-hover: #f97316;
+            --purple: #a78bfa;
+            --bg: #1e2224;
+            --card-bg: #27272A;
+            --text: #f8fafc;
+            --subtext: #9CA3AF;
+            --border: #3f464a;
+            --soft-blue: #60a5fa;
+            --danger: #f87171;
+            --warning-bg: #291e1a;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            color: var(--text); 
+            padding-bottom: 85px; 
+            transition: background 0.3s, color 0.3s;
+        }
+        
+        header { 
+            background: linear-gradient(135deg, #0f172a, #1e293b); 
+            color: white; 
+            padding: 24px 20px 20px; 
+            border-radius: 0 0 24px 24px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .brand-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .version-pill {
+            font-size: 0.68rem;
+            color: var(--accent);
+            font-weight: 700;
+            opacity: 0.85;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            padding: 8px 11px;
+            border-radius: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .icon-btn:hover { background: rgba(255,255,255,0.25); }
+
+        .profile-banner {
+            max-width: 650px;
+            margin: 15px auto 0;
+            background: rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            backdrop-filter: blur(5px);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .streak-badge {
+            background: linear-gradient(45deg, #f97316, #ef4444);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.78rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .nav-tabs { 
+            display: flex; 
+            justify-content: space-around; 
+            background: var(--card-bg); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border);
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        
+        .tab-btn { 
+            flex: 1;
+            border: none; 
+            background: none; 
+            font-weight: 700; 
+            color: var(--subtext); 
+            padding: 12px 2px; 
+            cursor: pointer; 
+            font-size: 0.68rem;
+            transition: 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        
+        .tab-btn.active { 
+            color: var(--accent); 
+            border-bottom: 3px solid var(--accent); 
+        }
+
+        .tab-btn span.icon { font-size: 1.05rem; }
+
+        .main-wrapper {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .container { padding: 16px; display: none; animation: fadeIn 0.3s ease-out; }
+        .container.active { display: block; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { 
+            background: var(--card-bg); 
+            border-radius: var(--radius); 
+            padding: 20px; 
+            margin-bottom: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border);
+        }
+        
+        h2 { 
+            margin-top: 0; 
+            font-size: 1.12rem; 
+            color: var(--accent); 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            gap: 10px; 
+        }
+
+        .badge {
+            background: var(--orange);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .badge-purple { background: var(--purple); }
+        .badge-blue { background: var(--soft-blue); }
+
+        .btn { 
+            width: 100%; 
+            border: none; 
+            padding: 12px 16px; 
+            border-radius: 14px; 
+            color: white; 
+            font-weight: 700; 
+            font-size: 0.9rem; 
+            margin-top: 10px; 
+            cursor: pointer; 
+            transition: 0.2s;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn:active { transform: scale(0.98); }
+        .btn-accent { background: var(--accent); }
+        .btn-accent:hover { background: var(--accent-hover); }
+        .btn-orange { background: var(--orange); }
+        .btn-orange:hover { background: var(--orange-hover); }
+        .btn-purple { background: var(--purple); }
+        .btn-water { background: var(--soft-blue); }
+        .btn-danger { background: var(--danger); }
+        .btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); box-shadow: none; }
+        .btn-outline-orange { background: transparent; border: 2px solid var(--orange); color: var(--orange); box-shadow: none; }
+        .btn-outline-purple { background: transparent; border: 2px solid var(--purple); color: var(--purple); box-shadow: none; }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 0.95rem;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+
+        select:focus, input:focus { outline: 2px solid var(--accent); }
+
+        .item { 
+            padding: 12px 14px; 
+            background: var(--bg); 
+            border-radius: 12px;
+            margin-bottom: 8px; 
+            display: flex; 
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid var(--accent);
+            transition: 0.2s;
+        }
+
+        .item.orange-border { border-left-color: var(--orange); }
+        .item.purple-border { border-left-color: var(--purple); }
+        .item.blue-border { border-left-color: var(--soft-blue); }
+        .item.red-border { border-left-color: var(--danger); }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .checkbox-container input {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .checkbox-container.done span {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .progress-container { background: var(--bg); border-radius: 20px; height: 12px; margin: 12px 0; overflow: hidden; border: 1px solid var(--border); }
+        .progress-bar { background: linear-gradient(90deg, var(--soft-blue), var(--accent)); height: 100%; width: 0%; transition: 0.5s ease-in-out; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+        .ai-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 10px 0;
+        }
+
+        .ai-chip {
+            background: var(--bg);
+            border: 1px solid var(--purple);
+            color: var(--text);
+            padding: 7px 11px;
+            border-radius: 20px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .ai-chip:active {
+            background: var(--purple);
+            color: white;
+        }
+
+        .ai-response-box {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 4px solid var(--purple);
+            border-radius: 14px;
+            padding: 15px;
+            margin-top: 14px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        /* Semáforo rápido de alimentos */
+        .traffic-btn {
+            border: 1.5px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            padding: 10px 6px;
+            border-radius: 14px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+        .traffic-btn.active-green {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .traffic-btn.active-amber {
+            background: rgba(249, 115, 22, 0.15);
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+        .traffic-btn.active-red {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .traffic-result-card {
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            line-height: 1.45;
+            background: var(--bg);
+            border-left: 5px solid var(--accent);
+        }
+
+        .breathing-box {
+            width: 180px;
+            height: 180px;
+            margin: 20px auto;
+            border: 4px solid var(--purple);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            transition: transform 4s linear, background-color 0.5s;
+        }
+
+        .breathing-box.expand { transform: scale(1.25); background: rgba(139, 92, 246, 0.15); }
+        .breathing-box.hold { transform: scale(1.25); background: rgba(139, 92, 246, 0.3); }
+        .breathing-box.contract { transform: scale(1); background: transparent; }
+
+        .breathing-phase { font-size: 1.1rem; font-weight: 800; color: var(--purple); }
+        .breathing-timer { font-size: 2.2rem; font-weight: 800; color: var(--text); }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            color: var(--orange);
+            font-family: monospace;
+            margin: 10px 0;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
+
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .grocery-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        #toastNotification {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            z-index: 2000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--accent);
+            max-width: 90%;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            padding: 16px;
+            font-size: 0.75rem;
+            color: var(--subtext);
+        }
+        .medbasha-stamp {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            opacity: 0.65;
+        }
+        .hexagon {
+            width: 15px;
+            height: 15px;
+            background: var(--accent);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 7px;
+            color: white;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <div class="brand-title">
+            <span style="font-size: 1.45rem;">🥗</span> VIDA SALUDABLE <span class="version-pill">v3.3.0</span>
+        </div>
+        <div class="header-actions">
+            <div class="streak-badge" title="Racha de días activos">
+                🔥 <span id="streakDisplay">1</span>
+            </div>
+            <button class="icon-btn" onclick="openProfileModal()" title="Perfil y Ajustes">👤</button>
+            <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" title="Cambiar Tema">🌙</button>
+            <button class="icon-btn" onclick="openTutorialModal()" title="Ayuda e Instrucciones">?</button>
+        </div>
+    </div>
+
+    <div class="profile-banner">
+        <span>Modo: <strong id="currentProfileName" style="color:var(--accent)">🏡 Cuidarnos en Casa</strong></span>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <button class="icon-btn" style="padding: 3px 8px; font-size: 0.74rem; background: var(--orange);" onclick="toggleMinViableMode()" id="minViableBtn" title="Versión suave para días cansados">⚡ Modo 10%</button>
+            <span id="currentDietName" style="opacity: 0.85; font-size: 0.78rem;">Sin Sal ni Azúcar</span>
+        </div>
+    </div>
+</header>
+
+<div class="nav-tabs">
+    <button class="tab-btn active" onclick="openTab('hoy')">
+        <span class="icon">🏠</span>Inicio
+    </button>
+    <button class="tab-btn" onclick="openTab('dieta')">
+        <span class="icon">🥗</span>Nutrición
+    </button>
+    <button class="tab-btn" onclick="openTab('ia')">
+        <span class="icon">✨</span>IA Cocina
+    </button>
+    <button class="tab-btn" onclick="openTab('fitness')">
+        <span class="icon">🪑</span>Movilidad
+    </button>
+    <button class="tab-btn" onclick="openTab('mente')">
+        <span class="icon">🧘</span>Calma
+    </button>
+    <button class="tab-btn" onclick="openTab('progreso')">
+        <span class="icon">🩺</span>Salud
+    </button>
+</div>
+
+<div class="main-wrapper">
+
+    <!-- TAB 1: INICIO -->
+    <div id="hoy" class="container active">
+        <div id="minViableBanner" class="card" style="display:none; background: var(--warning-bg); border-left: 5px solid var(--orange);">
+            <h2 style="color:var(--orange);">🛡️ Modo Suave Activo (Versión del 10%)</h2>
+            <p style="font-size: 0.85rem; margin: 4px 0;">Hoy es un día de poca energía o falta de aire. No te exijas: <strong>bebe agua despacio, evita la sal y el azúcar, y descansa sentada</strong>.</p>
+        </div>
+
+        <div class="card" id="smartCoachCard" style="border-left: 5px solid var(--accent);">
+            <h2>💡 Consejo Inteligente de Hoy <span class="badge">IA Hogar</span></h2>
+            <p id="smartCoachText" style="font-size: 0.88rem; margin: 6px 0; line-height: 1.45;">Cargando recomendación personalizada...</p>
+        </div>
+
+        <div class="card" style="border-left: 5px solid var(--orange);">
+            <h2>🧡 Semáforo de Saciedad & Antojos <span class="badge">Apoyo</span></h2>
+            <p id="snackTimeText" style="font-size: 0.85rem; font-weight: 600;">Último snack registrado: Ninguno hoy</p>
+            <div id="snackAlertBanner" style="display:none;" class="item orange-border">
+                ⚠️ <strong>¿Hambre real o ansiedad por dulce?</strong> Haz una pausa de 5 minutos con la técnica R.A.I.N.
+            </div>
+            <div class="grid-2">
+                <button class="btn btn-orange" onclick="logSnack()">🍏 Registrar Snack Sano</button>
+                <button class="btn btn-purple" onclick="openRainModal()">🧠 Calmar Ansiedad</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Logros Diarios en Familia <span class="badge-blue badge" id="completedTaskBadge">0/0</span></h2>
+            <div class="progress-container"><div id="mainProgressBar" class="progress-bar"></div></div>
+            <p style="font-size: 0.84rem; color: var(--subtext); text-align: center;" id="mainProgressSummary">Marca las comidas sin sal/azúcar y tus pequeños pasos de hoy.</p>
+            <button class="btn btn-outline" id="challengeBtn" onclick="toggleChallenge()">
+                <span id="challengeIcon">⚪</span> <span id="weeklyChallengeText">Hoy comemos 100% sin sal ni azúcar añadido</span>
+            </button>
+        </div>
+
+        <div class="card">
+            <h2>💧 Hidratación (Elimina Sodio) <span class="badge-blue badge" id="waterMlDisplay">0 / 2000 mL</span></h2>
+            <p style="font-size: 0.8rem; color: var(--subtext); margin-top: 0;">Beber agua ayuda a bajar la tensión arterial y controla el apetito antes de comer.</p>
+            <div class="progress-container"><div id="waterProgressBar" class="progress-bar" style="background:var(--soft-blue)"></div></div>
+            <div class="grid-2">
+                <button class="btn btn-water" onclick="addWater()">+1 Vaso (250ml)</button>
+                <button class="btn btn-outline" onclick="resetWater()">🔄 Reiniciar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: NUTRICIÓN -->
+    <div id="dieta" class="container">
+        <div class="card" style="background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.08));">
+            <h2>🛠️ Herramientas de Cocina y Saciedad</h2>
+            <div class="grid-2">
+                <button class="btn btn-outline" style="font-size:0.78rem;" onclick="openPlateModal()">🍽️ Método del Plato (50/25/25)</button>
+                <button class="btn btn-outline-orange" style="font-size:0.78rem;" onclick="openEmergencyMenuModal()">⚡ Platos Exprés (3 min)</button>
+                <button class="btn btn-outline-purple" style="font-size:0.78rem;" onclick="openSocialTipsModal()">🍷 Comer Fuera sin Culpa</button>
+                <button class="btn btn-water" style="font-size:0.78rem;" onclick="openMindfulEatModal()">🧘 Comer Despacio (20 min)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🍴 Menú Familiar <button class="btn btn-outline" style="width:auto; padding:4px 10px; font-size:0.75rem; margin-top:0;" onclick="openGroceryModal()">🛒 Lista Compra</button></h2>
+            
+            <label style="font-size: 0.8rem; font-weight: bold; color: var(--subtext);">ENFOQUE NUTRICIONAL:</label>
+            <select id="dietTypeSelector" onchange="changeDietFilter(this.value)">
+                <option value="sinsalazucar">❤️ Control Tensión (Sin Sal · Sin Azúcar)</option>
+                <option value="mediterranea">🥗 Mediterránea Equilibrada</option>
+                <option value="antiinflamatoria">🌿 Antiinflamatoria / Digestión Ligera</option>
+                <option value="vegana">🌱 Vegetariana / Vegana</option>
+                <option value="singluten">🌾 Sin Gluten / Lactosa</option>
+            </select>
+
+            <div id="dietMenuContainer" style="margin-top: 15px;"></div>
+
+            <div class="item orange-border" style="margin-top: 14px; font-size: 0.83rem; display:block;">
+                <strong>🌿 Secreto para dar mucho sabor sin sal:</strong> Usa ajo en polvo, cebolla, limón exprimido, pimentón dulce, comino, pimienta negra, orégano o laurel. El paladar se adapta en 14 días.
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💡 Consejo Nutricional Personalizado</h2>
+            <p id="profileDietTip" style="font-size: 0.85rem; color: var(--subtext); line-height: 1.5; margin: 0;"></p>
+        </div>
+    </div>
+
+    <!-- TAB 3: ASISTENTE INTELIGENTE IA -->
+    <div id="ia" class="container">
+        <!-- NUEVO: SEMÁFORO RÁPIDO DE ALIMENTOS -->
+        <div class="card">
+            <h2>🚦 Semáforo de Alimentos (Tensión y Azúcar)</h2>
+            <p style="font-size: 0.82rem; color: var(--subtext); margin-top: 0;">Comprueba al instante qué alimentos ayudan a bajar la tensión y cuáles esconden sal o azúcar:</p>
+            
+            <input type="text" id="trafficSearchInput" placeholder="Buscar alimento (ej. queso curado, plátano, atún, pan...)" oninput="searchFoodTraffic(this.value)">
+
+            <div class="grid-3" style="margin-top: 10px;">
+                <button class="traffic-btn active-green" id="btnTrafficGreen" onclick="showTrafficZone('green')">
+                    <span style="font-size: 1.2rem;">🟢</span>
+                    <span>Bajan Tensión</span>
+                </button>
+                <button class="traffic-btn" id="btnTrafficAmber" onclick="showTrafficZone('amber')">
+                    <span style="font-size: 1.2rem;">🟡</span>
+                    <span>Moderar</span>
+                </button>
+                <button class="traffic-btn" id="btnTrafficRed" onclick="showTrafficZone('red')">
+                    <span style="font-size: 1.2rem;">🔴</span>
+                    <span>Evitar (Sal/Azúcar)</span>
+                </button>
+            </div>
+
+            <div id="trafficDisplayBox" class="traffic-result-card"></div>
+        </div>
+
+        <!-- COPILOTO INTELIGENTE DE RECETAS -->
+        <div class="card">
+            <h2 style="color: var(--purple);">✨ Copiloto Inteligente de Cocina <span class="badge-purple badge">IA Local</span></h2>
+            <p style="font-size: 0.84rem; color: var(--subtext); margin-top: 0;">
+                Escribe cualquier ingrediente mediterráneo (berenjena, lentejas, merluza, garbanzos, tomate...), pide un guiso casero sin sal o busca un postre sin azúcar:
+            </p>
+
+            <div class="ai-chip-row">
+                <button class="ai-chip" onclick="askAI('Postre casero sin azúcar')">🍰 Postre sin azúcar</button>
+                <button class="ai-chip" onclick="askAI('Guiso casero de cuchara sin sal')">🍲 Guiso sin sal</button>
+                <button class="ai-chip" onclick="askAI('Receta con berenjena, tomate y ajo')">🍆 Berenjena mediterránea</button>
+                <button class="ai-chip" onclick="askAI('Guiso de lentejas o garbanzos')">🫘 Legumbres caseras</button>
+                <button class="ai-chip" onclick="askAI('Pescado al horno mediterráneo')">🐟 Pescado al horno</button>
+                <button class="ai-chip" onclick="askAI('Me siento muy cansada y sin aire hoy')">😮‍💨 Estoy cansada hoy</button>
+                <button class="ai-chip" onclick="askAI('Cena rápida sin cocinar mucho')">⏱️ Cena rápida 5 min</button>
+            </div>
+
+            <div style="display:flex; gap:8px; margin-top: 10px;">
+                <input type="text" id="aiInput" placeholder="Ej: lentejas, berenjena, postre de plátano..." style="margin-top:0;" onkeypress="if(event.key==='Enter') handleCustomAI()">
+                <button class="btn btn-purple" style="width:auto; margin-top:0;" onclick="handleCustomAI()">Consultar</button>
+            </div>
+
+            <div id="aiResponseBox" class="ai-response-box">
+                <strong style="color: var(--purple); display:block; margin-bottom: 6px;">🤖 Sugerencia del Copiloto:</strong>
+                <div id="aiResponseText"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: MOVILIDAD SUAVE -->
+    <div id="fitness" class="container">
+        <div class="card">
+            <h2 id="fitnessProfileTitle">🪑 Movilidad Suave</h2>
+            <p style="font-size: 0.82rem; color: var(--subtext); margin-bottom: 12px;">Movimientos sin impacto ni fatiga para mejorar la respiración, activar la circulación y cuidar la espalda:</p>
+            <div id="fitnessRoutineContainer"></div>
+        </div>
+
+        <div class="card">
+            <h2>⏱️ Pausa Suave de 3 Minutos</h2>
+            <p style="font-size: 0.84rem; color:var(--subtext);">Caminar despacio por el pasillo o mover las piernas sentada durante 3 minutos ayuda a bajar el azúcar después de comer.</p>
+            <div class="timer-display" id="activePauseTimerDisplay">03:00</div>
+            <div class="grid-2">
+                <button class="btn btn-accent" id="timerStartBtn" onclick="toggleActivePauseTimer()">Iniciar 3 Minutos</button>
+                <button class="btn btn-outline-orange" onclick="resetActivePauseTimer()">Reiniciar</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📐 Postura y Alivio Inmediato</h2>
+            <p id="ergonomicsSummary" style="font-size:0.85rem; color:var(--subtext); line-height: 1.45;"></p>
+            <button class="btn btn-danger" onclick="triggerSOSRelief()">🚨 BOTÓN S.O.S. ALIVIO LUMBAR Y AIRE</button>
+        </div>
+    </div>
+
+    <!-- TAB 5: CALMA Y DESCANSO -->
+    <div id="mente" class="container">
+        <div class="card">
+            <h2>🧘 Respiración para Bajar la Tensión <span class="badge-purple badge">Calma</span></h2>
+            <p style="font-size:0.84rem; color:var(--subtext); text-align: center;">Respirar lento envía una señal al corazón para relajar los vasos sanguíneos y bajar la presión.</p>
+            
+            <div class="breathing-box" id="breathingBox">
+                <div class="breathing-phase" id="breathingPhase">Listo</div>
+                <div class="breathing-timer" id="breathingCount">4</div>
+            </div>
+
+            <button class="btn btn-purple" id="breathingStartBtn" onclick="toggleBreathing()">Iniciar Respiración Guiada</button>
+        </div>
+
+        <div class="card">
+            <h2>🌙 Registro de Descanso Nocturno</h2>
+            <div class="grid-2">
+                <div>
+                    <label style="font-size:0.8rem; font-weight: bold;">Horas Dormidas:</label>
+                    <input type="number" step="0.5" id="sleepHoursInput" placeholder="Ej. 7.5" onchange="saveSleepData()">
+                </div>
+                <div>
+                    <label style="font-size:0.8rem; font-weight: bold;">¿Cómo despertaste?</label>
+                    <select id="sleepQualityInput" onchange="saveSleepData()">
+                        <option value="excelente">😊 Descansada</option>
+                        <option value="normal" selected>😐 Normal</option>
+                        <option value="cansado">😫 Cansada / Pesada</option>
+                    </select>
+                </div>
+            </div>
+            <p id="sleepAdviceText" style="font-size:0.82rem; color:var(--subtext); margin-top:10px;"></p>
+        </div>
+    </div>
+
+    <!-- TAB 6: SALUD (TENSIÓN Y PESO) -->
+    <div id="progreso" class="container">
+        <div class="card" style="border-left: 5px solid var(--danger);">
+            <h2>🩺 Control de Tensión Arterial <span class="badge" style="background:var(--danger);">Médico</span></h2>
+            <p style="font-size:0.82rem; color:var(--subtext); margin-top:0;">Apunta las tomas de casa para enseñárselas al médico en la próxima consulta.</p>
+            <div class="grid-2">
+                <input type="number" id="bpSysInput" placeholder="Alta / Sistólica (ej. 135)" style="margin:0;">
+                <input type="number" id="bpDiaInput" placeholder="Baja / Diastólica (ej. 85)" style="margin:0;">
+            </div>
+            <button class="btn btn-danger" onclick="saveNewBP()">Guardar Toma de Tensión</button>
+            <div id="bpHistoryList" style="margin-top: 12px;"></div>
+        </div>
+
+        <div class="card">
+            <h2>📉 Seguimiento de Peso (Opcional)</h2>
+            <p style="font-size:0.8rem; color:var(--subtext); margin-top:0;">Recomendado anotar máximo 1 vez por semana para evitar estrés.</p>
+            <div class="grid-2" style="background:var(--bg); padding:12px; border-radius:14px; margin-bottom:10px;">
+                <div>Actual: <strong id="progWeightCurrent" style="font-size:1.15rem;">--</strong> kg</div>
+                <div>Meta: <strong id="progWeightTarget" style="font-size:1.15rem; color:var(--accent);">--</strong> kg</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <input type="number" step="0.1" id="newWeightInput" placeholder="Nuevo peso (kg)..." style="margin:0;">
+                <button class="btn btn-accent" style="width:auto; margin:0;" onclick="saveNewWeight()">Guardar</button>
+            </div>
+            <div id="historyLogsList" style="margin-top: 12px;"></div>
+        </div>
+
+        <div class="card">
+            <h2>💾 Copia de Seguridad (IndexedDB)</h2>
+            <div class="grid-2">
+                <button class="btn btn-outline" onclick="exportDataJSON()">📥 Exportar JSON</button>
+                <button class="btn btn-outline-orange" onclick="document.getElementById('importFileInput').click()">📤 Importar JSON</button>
+            </div>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importDataJSON(event)">
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    <div class="medbasha-stamp">
+        <div class="hexagon">MB</div>
+        <span>medbasha</span>
+    </div>
+</footer>
+
+<!-- MODAL DE BIENVENIDA / INSTRUCCIONES -->
+<div class="modal-overlay" id="tutorialModal">
+    <div class="modal-card">
+        <h2 style="color:var(--accent); margin-bottom:8px;">🏡 Bienvenidos a Vida Saludable</h2>
+        <p style="font-size:0.88rem; color:var(--subtext); line-height:1.45;">
+            Vuestra herramienta familiar en casa para cuidar la tensión arterial y perder peso paso a paso, acompañando las indicaciones de vuestro médico y nutricionista:
+        </p>
+        <div class="item">
+            <span style="font-size:0.85rem;"><strong>❤️ Comidas sin sal ni azúcar:</strong> Platos caseros ricos y saciantes para cocinar una sola vez para toda la familia.</span>
+        </div>
+        <div class="item purple-border">
+            <span style="font-size:0.85rem;"><strong>🚦 Semáforo e IA Cocina:</strong> Consulta qué alimentos bajan la tensión, pide guisos caseros sin sal o postres sin azúcar.</span>
+        </div>
+        <div class="item orange-border">
+            <span style="font-size:0.85rem;"><strong>🪑 Movilidad sin fatiga:</strong> Ejercicios suaves sentada de pocos minutos para mejorar la respiración sin cansarte.</span>
+        </div>
+        <div class="item blue-border">
+            <span style="font-size:0.85rem;"><strong>🩺 Control Médico:</strong> Registra la tensión arterial y el peso para llevar un informe limpio a consulta.</span>
+        </div>
+        <button class="btn btn-accent" style="margin-top:16px; background:#10b981;" onclick="closeTutorialModal()">¡Entendido!</button>
+    </div>
+</div>
+
+<!-- MODALES DE HERRAMIENTAS -->
+<div class="modal-overlay" id="rainModal">
+    <div class="modal-card">
+        <h2 style="color:var(--purple); margin-bottom:6px;">🧠 Calmar Ansiedad (Técnica R.A.I.N.)</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:15px;">Cuando aparece deseo repentino de dulce o comida, suele ser cansancio o estrés. Hagamos esta pausa de 5 minutos juntos:</p>
+
+        <div id="rainStepContainer" style="background:var(--bg); padding:16px; border-radius:16px; border-left:4px solid var(--purple); margin-bottom:15px;">
+            <h3 id="rainStepTitle" style="margin:0 0 6px 0; color:var(--purple); font-size:1rem;">1. RECONOCER</h3>
+            <p id="rainStepDesc" style="font-size:0.85rem; margin:0; line-height:1.4;">Di en voz alta: <em>"Estoy sintiendo un impulso de comer por ansiedad o cansancio, no por hambre física real."</em></p>
+        </div>
+
+        <div style="text-align:center; margin:15px 0;">
+            <div style="font-size:2rem; font-weight:bold; color:var(--purple);" id="rainTimerDisplay">05:00</div>
+            <small style="color:var(--subtext);">Bebe un vaso grande de agua fresca mientras esperas.</small>
+        </div>
+
+        <div class="grid-2">
+            <button class="btn btn-purple" id="rainNextBtn" onclick="nextRainStep()">Siguiente Paso ▶</button>
+            <button class="btn btn-outline" onclick="closeRainModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="plateModal">
+    <div class="modal-card">
+        <h2 style="color:var(--accent); margin-bottom:6px;">🍽️ Método del Plato Saciante</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:15px;">Llena el plato con alimentos reales para no pasar hambre ni subir la tensión:</p>
+
+        <div class="item">
+            <div>
+                <strong>🥦 50% Verduras y Hortalizas (Sin sal)</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Ensalada, verduras al vapor, salteadas, cremas caseras o al horno.</p>
+            </div>
+        </div>
+
+        <div class="item blue-border">
+            <div>
+                <strong>🍗 25% Proteína Magra</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Huevos, pescado blanco o azul, pollo, pavo o legumbres bien lavadas.</p>
+            </div>
+        </div>
+
+        <div class="item orange-border">
+            <div>
+                <strong>🥔 25% Energía Lenta (Sin azúcares)</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Patata cocida/asada, boniato, arroz integral, avena o legumbres.</p>
+            </div>
+        </div>
+
+        <div class="item purple-border">
+            <div>
+                <strong>🥑 Grasa Saludable + Especias</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Aceite de oliva virgen extra, aguacate, nueces sin sal, limón y hierbas aromáticas.</p>
+            </div>
+        </div>
+
+        <button class="btn btn-accent" style="margin-top:15px;" onclick="closePlateModal()">Entendido</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="emergencyMenuModal">
+    <div class="modal-card">
+        <h2 style="color:var(--orange); margin-bottom:6px;">⚡ Platos Exprés Sin Sal ni Azúcar (3 Min)</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:15px;">Opciones rápidas para días con cansancio o poco tiempo:</p>
+
+        <div class="item orange-border">
+            <div>
+                <strong>🥗 1. Ensalada Templada de Garbanzos</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Medio bote de garbanzos bien lavados bajo el grifo (quita el 80% de sal) + atún al natural bajo en sal + tomate + aceite de oliva y comino.</p>
+            </div>
+        </div>
+
+        <div class="item orange-border">
+            <div>
+                <strong>🍳 2. Tortilla Jugosa de Calabacín</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">2 huevos batidos con calabacín rallado y ajo en polvo hechos en sartén en 3 minutos + tomate natural con orégano.</p>
+            </div>
+        </div>
+
+        <div class="item orange-border">
+            <div>
+                <strong>🍎 3. Postre Dulce Natural Rápido</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Yogur natural sin azúcar con canela y manzana troceada (calentada 2 min al microondas).</p>
+            </div>
+        </div>
+
+        <button class="btn btn-orange" style="margin-top:15px;" onclick="closeEmergencyMenuModal()">Cerrar</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="mindfulEatModal">
+    <div class="modal-card">
+        <h2 style="color:var(--soft-blue); margin-bottom:6px;">🧘 Comer Despacio (20 Minutos)</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:12px;">El estómago tarda 20 minutos en avisar al cerebro de que ya está lleno. Comer despacio ayuda a quedarse saciada con menos cantidad.</p>
+
+        <div style="text-align:center; margin:15px 0;">
+            <div style="font-size:2.8rem; font-weight:800; color:var(--soft-blue);" id="mindfulTimerDisplay">20:00</div>
+            <p id="mindfulPhaseText" style="font-size:0.85rem; font-weight:600; color:var(--text); margin-top:5px;">Mastica despacio · Suelta el tenedor entre bocados</p>
+        </div>
+
+        <div class="grid-2">
+            <button class="btn btn-water" id="mindfulStartBtn" onclick="toggleMindfulTimer()">Iniciar Comida</button>
+            <button class="btn btn-outline" onclick="closeMindfulEatModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="socialTipsModal">
+    <div class="modal-card">
+        <h2 style="color:var(--purple); margin-bottom:6px;">🍷 Comer Fuera Cuidando la Tensión</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:15px;">Consejos prácticos para reuniones familiares o restaurantes:</p>
+
+        <div class="item purple-border">
+            <div>
+                <strong>🧂 1. Pide la plancha "sin sal añadida"</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">En cualquier bar o restaurante preparan la carne, pescado o verdura a la plancha sin sal si lo pides al camarero, y puedes pedir medio limón para aliñar.</p>
+            </div>
+        </div>
+
+        <div class="item purple-border">
+            <div>
+                <strong>💧 2. Agua con limón o gas en lugar de refrescos</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Evita los refrescos azucarados y bebidas con sodio; pide agua fresca con una rodaja de limón.</p>
+            </div>
+        </div>
+
+        <div class="item purple-border">
+            <div>
+                <strong>☕ 3. Cierre sin azúcar</strong>
+                <p style="font-size:0.8rem; margin:2px 0 0 0; color:var(--subtext);">Si todos piden postre, pide una infusión templada con canela o fruta natural del tiempo.</p>
+            </div>
+        </div>
+
+        <button class="btn btn-purple" style="margin-top:15px;" onclick="closeSocialTipsModal()">Entendido</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="profileModal">
+    <div class="modal-card">
+        <h2 style="color:var(--accent); margin-bottom:10px;">👤 Configuración Familiar</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:15px;">Adapta la aplicación a vuestro ritmo diario:</p>
+
+        <label style="font-size:0.85rem; font-weight:bold;">Nombre o Apodo Familiar:</label>
+        <input type="text" id="userNameInput" placeholder="Ej. Hogar Saludable...">
+
+        <label style="font-size:0.85rem; font-weight:bold; margin-top:12px; display:block;">Perfil de Movilidad y Ritmo:</label>
+        <select id="userProfileSelector">
+            <option value="hogar">🏡 Cuidarnos en Casa (Movilidad suave sin fatiga)</option>
+            <option value="oficina">💻 Oficina / Teletrabajo</option>
+            <option value="conduccion">🚌 Conducción / Transporte</option>
+            <option value="comercio">🧍 Trabajo de Pie / Comercio</option>
+            <option value="turnos">🔄 Turnos Rotativos</option>
+        </select>
+
+        <div class="grid-2" style="margin-top:12px;">
+            <div>
+                <label style="font-size:0.85rem; font-weight:bold;">Peso Actual (kg):</label>
+                <input type="number" step="0.1" id="userCurrentWeightInput" placeholder="Opcional">
+            </div>
+            <div>
+                <label style="font-size:0.85rem; font-weight:bold;">Meta Saludable (kg):</label>
+                <input type="number" step="0.1" id="userTargetWeightInput" placeholder="Opcional">
+            </div>
+        </div>
+
+        <button class="btn btn-accent" style="margin-top:20px;" onclick="saveProfileModal()">Guardar Ajustes</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="groceryModal">
+    <div class="modal-card">
+        <h2 style="color:var(--accent); margin-bottom:10px;">🛒 Lista de la Compra Sin Sal ni Azúcar</h2>
+        <p style="font-size:0.85rem; color:var(--subtext); margin-bottom:15px;">Alimentos reales para llenar la despensa de forma saludable:</p>
+        
+        <div id="groceryItemsList"></div>
+
+        <button class="btn btn-outline" style="margin-top:15px;" onclick="closeGroceryModal()">Cerrar</button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="sosModal">
+    <div class="modal-card">
+        <h2 style="color:var(--danger); margin-bottom:10px;">🚨 Alivio Inmediato y Respiración</h2>
+        <p id="sosModalContent" style="font-size:0.9rem; line-height:1.5; color:var(--text); margin-bottom:15px;"></p>
+        <button class="btn btn-danger" onclick="closeSosModal()">Me siento más cómoda</button>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toastNotification">
+    <span id="toastIcon">✨</span> <span id="toastMessage">Notificación</span>
+</div>
+
+<script>
+    // Persistencia IndexedDB Unificada
+    const DB_NAME = 'VidaSaludableDB';
+    const DB_VERSION = 1;
+    let db = null;
+
+    function openDatabase() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, DB_VERSION);
+            request.onerror = () => reject('Error IndexedDB');
+            request.onsuccess = (e) => {
+                db = e.target.result;
+                resolve(db);
+            };
+            request.onupgradeneeded = (e) => {
+                const database = e.target.result;
+                if (!database.objectStoreNames.contains('stateStore')) {
+                    database.createObjectStore('stateStore', { keyPath: 'id' });
+                }
+            };
+        });
+    }
+
+    async function dbGet(key) {
+        if (!db) await openDatabase();
+        return new Promise((resolve) => {
+            const tx = db.transaction('stateStore', 'readonly');
+            const req = tx.objectStore('stateStore').get(key);
+            req.onsuccess = () => resolve(req.result ? req.result.data : null);
+            req.onerror = () => resolve(null);
+        });
+    }
+
+    async function dbSet(key, data) {
+        if (!db) await openDatabase();
+        return new Promise((resolve) => {
+            const tx = db.transaction('stateStore', 'readwrite');
+            tx.objectStore('stateStore').put({ id: key, data });
+            tx.oncomplete = () => resolve();
+        });
+    }
+
+    let appState = {
+        theme: 'light',
+        tutorialSeen: false,
+        user: {
+            name: "Hogar Saludable",
+            profile: "hogar",
+            diet: "sinsalazucar",
+            currentWeight: 0,
+            targetWeight: 0
+        },
+        streak: { count: 1, lastDate: new Date().toDateString() },
+        daily: {},
+        weightHistory: [],
+        bpHistory: []
+    };
+
+    const todayKey = new Date().toISOString().slice(0, 10);
+    let isMinViableMode = false;
+
+    const rainSteps = [
+        { title: "1. RECONOCER", desc: "Di en voz alta: 'Estoy sintiendo ganas de dulce o comida por cansancio o estrés, no por hambre física real.'" },
+        { title: "2. ACEPTAR", desc: "No te sientas culpable. Es normal tener antojos cuando el cuerpo está acostumbrado al azúcar o a la sal." },
+        { title: "3. HIDRATAR Y RESPIRAR", desc: "Bebe ahora un vaso grande de agua fresca despacio y haz 4 respiraciones profundas soltando los hombros." },
+        { title: "4. ELEGIR CON CALMA", desc: "Si tras 5 minutos sigue el hambre real, elige un yogur natural con canela, una manzana asada o 4 nueces sin sal." }
+    ];
+    let currentRainStepIndex = 0;
+    let rainTimerInterval = null;
+    let rainTimerSeconds = 300;
+
+    let pauseTimerInterval = null;
+    let pauseTimerSeconds = 180;
+    let pauseTimerRunning = false;
+
+    let breathingInterval = null;
+    let breathingRunning = false;
+
+    let mindfulEatInterval = null;
+    let mindfulEatSeconds = 1200;
+    let mindfulEatRunning = false;
+
+    function showToast(message, icon = "✨") {
+        const toast = document.getElementById('toastNotification');
+        document.getElementById('toastIcon').innerText = icon;
+        document.getElementById('toastMessage').innerText = message;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 3200);
+    }
+
+    function getTodayData() {
+        if (!appState.daily[todayKey]) {
+            appState.daily[todayKey] = {
+                water: 0,
+                completedTasks: {},
+                snackImpulses: 0,
+                lastSnackTime: null,
+                challengeDone: false,
+                sleepHours: 7,
+                sleepQuality: "normal"
+            };
+        }
+        return appState.daily[todayKey];
+    }
+
+    // Semáforo rápido de alimentos (Verde / Ámbar / Rojo)
+    const TRAFFIC_ZONES = {
+        green: {
+            border: "var(--accent)",
+            title: "🟢 Aliados para Bajar la Tensión (Consumo Libre)",
+            desc: "Ricos en potasio, fibra y agua; ayudan al riñón a expulsar sodio de forma natural:",
+            items: [
+                "<strong>Verduras frescas o congeladas:</strong> Calabacín, berenjena, espinacas, brócoli, tomate, pepino, pimiento, cebolla, puerro y lechugas.",
+                "<strong>Fruta entera natural:</strong> Plátano, manzana, pera, naranja, mandarina, kiwi y frutos rojos (nunca en almíbar ni zumo envasado).",
+                "<strong>Proteínas frescas sin procesar:</strong> Huevos, pechuga de pollo/pavo natural, pescado blanco (merluza, bacalao fresco) y pescado azul (salmón, sardinas, caballa).",
+                "<strong>Legumbres secas o lavadas:</strong> Lentejas, garbanzos y alubias.",
+                "<strong>Potenciadores de sabor sin sodio:</strong> Aceite de oliva virgen extra, ajo, limón, canela, comino, pimentón, orégano y laurel."
+            ]
+        },
+        amber: {
+            border: "var(--orange)",
+            title: "🟡 Moderar Cantidad y Revisar Etiqueta",
+            desc: "Pueden tomarse en porciones controladas o aplicando un truco para reducir su sal:",
+            items: [
+                "<strong>Legumbres y verduras de bote:</strong> Lávalas 30 segundos bajo el grifo en un colador para quitar hasta el 80% de la sal del líquido.",
+                "<strong>Atún o caballa en lata:</strong> Elige siempre la versión 'al natural' o 'bajo en sal' y escúrrela bien.",
+                "<strong>Pan y tortitas:</strong> Compra pan integral etiquetado explícitamente como 'Sin sal añadida' (el pan normal tiene mucha sal oculta).",
+                "<strong>Lácteos suaves:</strong> Yogur natural sin azúcar, leche o queso fresco tipo Burgos '0% sal añadida'.",
+                "<strong>Frutos secos:</strong> Siempre crudos o tostados 'sin sal' (4-6 unidades al día)."
+            ]
+        },
+        red: {
+            border: "var(--danger)",
+            title: "🔴 Evitar (Suben la Tensión y el Azúcar)",
+            desc: "Contienen sodio oculto o azúcares rápidos que provocan retención de líquidos y ansiedad:",
+            items: [
+                "<strong>Embutidos y fiambres:</strong> Jamón serrano, chorizo, salchichón, choped, salchichas y bacon.",
+                "<strong>Quesos curados o fundidos:</strong> Queso manchego curado, roquefort, quesitos en porciones o rallados industriales.",
+                "<strong>Condimentos y salsas:</strong> Pastillas de caldo (Avecrem), salsa de soja, kétchup, mayonesa de bote y sopas de sobre.",
+                "<strong>Aperitivos y encurtidos:</strong> Aceitunas, pepinillos, patatas fritas de bolsa, frutos secos fritos o salados.",
+                "<strong>Azúcares ocultos:</strong> Bollería, galletas (incluso las 'integrales' o 'digestive'), refrescos, zumos de caja y yogures de sabores."
+            ]
+        }
+    };
+
+    const TRAFFIC_FOOD_INDEX = [
+        { palabras: ['platano', 'plátano', 'manzana', 'pera', 'naranja', 'kiwi', 'fruta'], zona: 'green', nota: 'Fruta entera: excelente fuente de potasio y fibra para bajar la tensión. Evita zumos envasados.' },
+        { palabras: ['calabacin', 'calabacín', 'berenjena', 'espinaca', 'brocoli', 'brócoli', 'tomate', 'pepino', 'verdura', 'ensalada', 'cebolla', 'ajo'], zona: 'green', nota: 'Verduras frescas: base principal del plato. Llenan el estómago sin calorías ni sodio.' },
+        { palabras: ['pollo', 'pavo', 'merluza', 'salmon', 'salmón', 'pescado', 'huevo', 'huevos', 'sepia'], zona: 'green', nota: 'Proteína fresca: muy saciante y sin sal añadida si se cocina en casa con limón y especias.' },
+        { palabras: ['yogur', 'leche', 'queso fresco'], zona: 'amber', nota: 'Elige siempre yogur natural sin azúcar y queso fresco sin sal añadida.' },
+        { palabras: ['pan', 'tostada', 'tortita', 'arroz', 'pasta', 'avena'], zona: 'amber', nota: 'El pan común lleva mucha sal oculta: busca pan integral "sin sal añadida" y raciones moderadas.' },
+        { palabras: ['atun', 'atún', 'lata', 'conserva', 'garbanzo', 'lenteja'], zona: 'amber', nota: 'Si son de bote o lata, elige versiones bajas en sal o lávalas bajo el grifo para eliminar el sodio.' },
+        { palabras: ['queso curado', 'curado', 'manchego', 'quesitos'], zona: 'red', nota: 'Los quesos curados concentran muchísimo sodio y grasa; sustitúyelos por queso fresco sin sal.' },
+        { palabras: ['jamon', 'jamón', 'chorizo', 'embutido', 'salchicha', 'fuet', 'mortadela', 'chopped'], zona: 'red', nota: 'Los embutidos son una de las mayores fuentes de sal oculta que disparan la tensión arterial.' },
+        { palabras: ['aceituna', 'oliva', 'encurtido', 'pepinillo', 'patatas fritas', 'snack'], zona: 'red', nota: 'Contienen salmuera o exceso de sodio que provoca retención de líquidos y sube la tensión.' },
+        { palabras: ['galleta', 'bolleria', 'bollería', 'magdalena', 'chocolate', 'azucar', 'azúcar', 'refresco', 'zumo', 'pastel', 'tarta'], zona: 'red', nota: 'Provocan picos rápidos de azúcar en sangre seguidos de más hambre y cansancio.' },
+        { palabras: ['avecrem', 'pastilla', 'caldo', 'soja', 'ketchup', 'salsa'], zona: 'red', nota: 'Las pastillas de caldo y salsas comerciales tienen altísimo contenido en sodio. Usa laurel, ajo y especias.' }
+    ];
+
+    function showTrafficZone(zoneKey) {
+        const zone = TRAFFIC_ZONES[zoneKey];
+        const box = document.getElementById('trafficDisplayBox');
+        document.getElementById('trafficSearchInput').value = '';
+
+        document.getElementById('btnTrafficGreen').className = 'traffic-btn' + (zoneKey === 'green' ? ' active-green' : '');
+        document.getElementById('btnTrafficAmber').className = 'traffic-btn' + (zoneKey === 'amber' ? ' active-amber' : '');
+        document.getElementById('btnTrafficRed').className = 'traffic-btn' + (zoneKey === 'red' ? ' active-red' : '');
+
+        box.style.borderLeftColor = zone.border;
+        box.innerHTML = `
+            <strong style="display:block; margin-bottom:4px;">${zone.title}</strong>
+            <span style="color:var(--subtext); display:block; margin-bottom:8px;">${zone.desc}</span>
+            <ul style="margin:0; padding-left:18px;">
+                ${zone.items.map(i => `<li style="margin-bottom:5px;">${i}</li>`).join('')}
+            </ul>
+        `;
+    }
+
+    function searchFoodTraffic(queryText) {
+        const q = queryText.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if (!q) {
+            showTrafficZone('green');
+            return;
+        }
+
+        const found = TRAFFIC_FOOD_INDEX.find(entry => 
+            entry.palabras.some(p => q.includes(p.normalize("NFD").replace(/[\u0300-\u036f]/g, "")))
+        );
+
+        const box = document.getElementById('trafficDisplayBox');
+        document.getElementById('btnTrafficGreen').className = 'traffic-btn';
+        document.getElementById('btnTrafficAmber').className = 'traffic-btn';
+        document.getElementById('btnTrafficRed').className = 'traffic-btn';
+
+        if (found) {
+            const labels = {
+                green: { icon: '🟢 SEMÁFORO VERDE (Recomendado)', color: 'var(--accent)', btn: 'btnTrafficGreen', cls: 'active-green' },
+                amber: { icon: '🟡 SEMÁFORO ÁMBAR (Con moderación)', color: 'var(--orange)', btn: 'btnTrafficAmber', cls: 'active-amber' },
+                red: { icon: '🔴 SEMÁFORO ROJO (Evitar por sal o azúcar)', color: 'var(--danger)', btn: 'btnTrafficRed', cls: 'active-red' }
+            };
+            const meta = labels[found.zona];
+            document.getElementById(meta.btn).classList.add(meta.cls);
+            box.style.borderLeftColor = meta.color;
+            box.innerHTML = `
+                <strong style="color:${meta.color}; display:block; margin-bottom:4px;">${meta.icon}</strong>
+                <span>${found.nota}</span>
+            `;
+        } else {
+            box.style.borderLeftColor = 'var(--soft-blue)';
+            box.innerHTML = `
+                <strong>🔍 Regla rápida para "${queryText}":</strong><br>
+                • Si es un alimento fresco sin envase (verdura, fruta, carne o pescado fresco), es <strong>🟢 Verde</strong>.<br>
+                • Si viene en paquete, lata o bote, mira la etiqueta: evita si tiene más de <strong>0,3g de sal</strong> o más de <strong>5g de azúcar</strong> por cada 100g.
+            `;
+        }
+    }
+
+    const PROFILE_CONFIGS = {
+        hogar: {
+            name: "Cuidarnos en Casa",
+            icon: "🏡",
+            dietTip: "Para bajar la tensión sin medicación y perder peso sin pasar hambre, llena siempre la mitad del plato con verdura y sustituye la sal por ajo, limón, pimentón y hierbas aromáticas.",
+            ergonomics: "Si te cansas al estar de pie o subir escaleras, realiza todos tus ejercicios sentada en una silla firme con la espalda apoyada. Caminar 3-5 minutos muy despacio por el pasillo tras comer mejora la circulación sin fatiga.",
+            sos: "🚨 ALIVIO INMEDIATO Y AIRE: Siéntate recta en una silla, apoya los pies en el suelo, lleva suavemente los hombros hacia atrás mientras tomas aire por la nariz en 4 segundos y suéltalo por la boca en 6 segundos.",
+            exercises: [
+                "🪑 Sentada: Subir puntas de pies y talones (1 min sin fatiga)",
+                "🌬️ Sentada: Abrir pecho y respirar lento (5 repeticiones)",
+                "🦵 Sentada: Elevar suavemente una rodilla y luego otra (1 min)",
+                "🚶‍♀️ Paseo muy suave por el pasillo después de comer (3-5 min)"
+            ]
+        },
+        oficina: {
+            name: "Oficina / Teletrabajo",
+            icon: "💻",
+            dietTip: "Prioriza alimentos frescos sin procesar ni sal añadida y mantén una botella de agua en la mesa para evitar el picoteo por estrés.",
+            ergonomics: "Pies apoyados en el suelo, monitor a la altura de los ojos y codos a 90°. Levántate 2 minutos cada hora.",
+            sos: "🚨 ALIVIO ESCRITORIO: Levántate, entrelaza los dedos por detrás de la espalda, abre el pecho y mira hacia arriba durante 15 segundos.",
+            exercises: [
+                "🪑 Sentadillas suaves en silla (10 reps)",
+                "🙆‍♂️ Extensión de pecho y escápulas (10 reps)",
+                "🔄 Rotación de cuello y hombros (15 segs)",
+                "🚶 Caminata ligera de 5 minutos"
+            ]
+        },
+        conduccion: {
+            name: "Conducción / Transporte",
+            icon: "🚌",
+            dietTip: "Evita comidas pesadas o con mucha sal antes de conducir para prevenir somnolencia y retención de líquidos.",
+            ergonomics: "Ajusta el respaldo a 90-100° y mantén apoyos lumbares firmes.",
+            sos: "🚨 BOTÓN S.O.S. LUMBAR: En parada segura, ponte de pie, apoya ambas manos en la zona lumbar y arquea suavemente la espalda hacia atrás.",
+            exercises: [
+                "🌉 Puente de glúteo en casa (12 reps)",
+                "🐱 Estiramiento gato-camello suave (10 reps)",
+                "🧘 Estiramiento de piernas sin impacto",
+                "🚶 Caminata tranquila tras la jornada (5 min)"
+            ]
+        },
+        comercio: {
+            name: "Trabajo de Pie / Comercio",
+            icon: "🧍",
+            dietTip: "Prioriza verduras y frutas ricas en potasio (plátano, calabacín, espinacas) para compensar el sodio y mejorar la circulación.",
+            ergonomics: "Alterna el peso entre ambos pies y evita permanecer completamente inmóvil.",
+            sos: "🚨 ALIVIO PIERNAS CANSADAS: Siéntate 3 minutos y eleva ligeramente los pies o mueve los tobillos en círculos.",
+            exercises: [
+                "🦶 Elevación suave de talones (12 reps)",
+                "🔄 Movilidad articular de tobillos",
+                "🪑 Descanso lumbar sentada con respiración",
+                "🦵 Estiramiento suave de gemelos"
+            ]
+        },
+        turnos: {
+            name: "Turnos Rotativos",
+            icon: "🔄",
+            dietTip: "Evita dulces y bollería industrial en turnos cambiantes; opta por yogur natural, fruta o frutos secos sin sal.",
+            ergonomics: "Cuida la oscuridad del dormitorio al descansar y cena ligero antes de dormir.",
+            sos: "🚨 PAUSA DE CALMA: Bebe un vaso de agua fresca y realiza 1 minuto de respiración profunda.",
+            exercises: [
+                "🌬️ Respiración diafragmática (2 min)",
+                "🪑 Movilidad articular sentada",
+                "🧘 Estiramiento suave de cuello y espalda",
+                "🚶 Paseo tranquilo de 5 minutos"
+            ]
+        }
+    };
+
+    const DIET_PLANS = {
+        sinsalazucar: {
+            name: "Sin Sal · Sin Azúcar",
+            menu: [
+                { label: "🌅 Desayuno", text: "Tostada de pan integral sin sal con aceite de oliva virgen extra y tomate natural rallado + infusión o café sin azúcar" },
+                { label: "🍎 Media Mañana", text: "1 manzana o pera + 4 nueces al natural (sin sal)" },
+                { label: "☀️ Almuerzo Familiar", text: "Lentejas o garbanzos guisados con mucha verdura (calabacín, zanahoria, laurel y comino, sin sal ni embutidos) + ensalada" },
+                { label: "🌙 Cena Ligera", text: "Tortilla francesa de 2 huevos con espinacas y ajo + crema suave de calabacín sin sal" }
+            ],
+            grocery: [
+                "Pan integral sin sal añadida",
+                "Aceite de oliva virgen extra",
+                "Tomates maduros, pepino y brotes verdes",
+                "Calabacín, zanahoria, cebolla y puerro",
+                "Lentejas y garbanzos (si son de bote, lavar bien)",
+                "Huevos frescos",
+                "Pechuga de pollo y pavo natural sin sal",
+                "Merluza, salmón o caballa",
+                "Yogur natural sin azúcar y canela en polvo",
+                "Manzanas, peras, plátanos y limones",
+                "Nueces y almendras crudas (sin sal)",
+                "Especias: ajo en polvo, pimentón dulce, comino, orégano y laurel"
+            ]
+        },
+        mediterranea: {
+            name: "Mediterránea Equilibrada",
+            menu: [
+                { label: "🌅 Desayuno", text: "Tostada integral sin sal con aceite de oliva, tomate y huevo escalfado" },
+                { label: "🍎 Media Mañana", text: "Una pieza de fruta de temporada y 4 nueces sin sal" },
+                { label: "☀️ Almuerzo", text: "Pechuga de pollo a la plancha con limón y orégano + pimientos asados y arroz integral" },
+                { label: "🌙 Cena", text: "Filete de merluza al horno con cebolla, tomate y ensalada verde" }
+            ],
+            grocery: ["Huevos camperos", "Aceite de oliva virgen extra", "Pan integral sin sal", "Arroz integral", "Pechuga de pollo", "Merluza", "Fruta de temporada", "Nueces crudas", "Verduras variadas"]
+        },
+        antiinflamatoria: {
+            name: "Antiinflamatoria Ligera",
+            menu: [
+                { label: "🌅 Desayuno", text: "Yogur natural sin azúcar con avena suave, canela y plátano" },
+                { label: "🍎 Media Mañana", text: "Puñado de almendras crudas sin sal e infusión" },
+                { label: "☀️ Almuerzo", text: "Salmón a la plancha con brócoli al vapor y patata cocida" },
+                { label: "🌙 Cena", text: "Crema casera de calabaza y puerro (sin sal) con filete de pavo" }
+            ],
+            grocery: ["Yogur natural sin azúcar", "Copos de avena", "Canela y cúrcuma", "Salmón fresco", "Brócoli y patatas", "Calabaza y puerro", "Pechuga de pavo", "Almendras crudas"]
+        },
+        vegana: {
+            name: "Vegetariana / Vegana",
+            menu: [
+                { label: "🌅 Desayuno", text: "Porridge de avena con chía, canela y manzana" },
+                { label: "🍎 Media Mañana", text: "Pera con un puñado de avellanas sin sal" },
+                { label: "☀️ Almuerzo", text: "Garbanzos salteados con espinacas, ajo y pimentón dulce" },
+                { label: "🌙 Cena", text: "Crema de verduras casera sin sal con tofu a la plancha" }
+            ],
+            grocery: ["Copos de avena", "Semillas de chía", "Garbanzos", "Tofu firme", "Espinacas", "Verduras variadas", "Frutos secos al natural"]
+        },
+        singluten: {
+            name: "Sin Gluten / Lactosa",
+            menu: [
+                { label: "🌅 Desayuno", text: "Tortitas de arroz sin sal con aguacate y limón" },
+                { label: "🍎 Media Mañana", text: "Fruta fresca y 4 nueces" },
+                { label: "☀️ Almuerzo", text: "Arroz integral con pollo guisado con verduras y hierbas" },
+                { label: "🌙 Cena", text: "Tortilla francesa de 2 huevos con calabacín" }
+            ],
+            grocery: ["Tortitas de arroz sin sal", "Aguacate y limones", "Arroz integral", "Pollo y huevos", "Calabacín y verduras", "Nueces crudas"]
+        }
+    };
+
+    // Base de conocimiento inteligente del Copiloto Nutricional Mediterráneo
+    const diccionarioIA = [
+        {
+            claves: ['postre', 'dulce', 'ansiedad', 'chocolate', 'tarta', 'bizcocho', 'galleta', 'flan', 'natillas'],
+            titulo: "🍰 Postres Caseros 100% Sin Azúcar",
+            contenido: `
+                • <strong>Manzana o pera asada aromática:</strong> Pártela en gajos, espolvorea canela y unas gotas de limón y calienta 3 min en microondas. Sabe a tarta casera.<br>
+                • <strong>Mousse rápida de cacao y plátano:</strong> Tritura 1 plátano maduro con 1 cucharadita de cacao puro desgrasado (sin azúcar) y un chorrito de leche o bebida vegetal. Enfría 15 min.<br>
+                • <strong>Bizcocho en taza (2 minutos):</strong> Mezcla en una taza 1 huevo, medio plátano maduro aplastado, 2 cucharadas de copos de avena molidos y canela. Cocina 1 min 45 seg al microondas.<br>
+                • <strong>Crema suave de yogur y limón:</strong> Yogur natural sin azúcar batido con ralladura de limón y 3 nueces picadas.
+            `
+        },
+        {
+            claves: ['guiso', 'cuchara', 'potaje', 'estofado', 'caldo', 'sopa', 'puchero'],
+            titulo: "🍲 Guisos Caseros Saciantes (Sin Sal ni Pastillas)",
+            contenido: `
+                • <strong>Base de sabor sin sodio:</strong> Sofríe abundante cebolla, ajo, puerro, pimiento y tomate maduro rallado con aceite de oliva. Añade pimentón dulce, laurel, comino o cúrcuma.<br>
+                • <strong>Estofado de pavo o pollo con patata:</strong> Trocea pechuga o muslo sin piel, dóralo con ajo y cebolla, añade zanahoria, judías verdes, patata chascada, agua y laurel. Cocina 25 min a fuego suave.<br>
+                • <strong>Secreto para caldos con mucho cuerpo:</strong> Añade siempre un trozo de apio, nabo o puerro y una rama de perejil fresco al hervir; aportan sales minerales naturales que sustituyen la sal común.
+            `
+        },
+        {
+            claves: ['lenteja', 'garbanzo', 'alubia', 'judia', 'judía', 'legumbre'],
+            titulo: "🫘 Legumbres Mediterráneas Saludables",
+            contenido: `
+                • <strong>Lentejas viudas de la huerta:</strong> Cocínalas solo con verduras (calabacín, zanahoria, cebolla, tomate, ajo), una hoja de laurel y pimentón dulce. Son muy ricas en potasio, ideal para bajar la tensión.<br>
+                • <strong>Garbanzos con espinacas y huevo:</strong> Si usas garbanzos de bote, lávalos muy bien bajo el grifo durante 30 segundos para eliminar el 80% de la sal de conserva. Saltéalos con ajo, comino, espinacas y huevo duro.<br>
+                • <strong>Alubias blancas con verduras:</strong> Guisadas con calabaza, puerro y un chorrito de aceite de oliva en crudo al final.
+            `
+        },
+        {
+            claves: ['berenjena', 'pisto', 'escalivada', 'calabacin', 'calabacín', 'pimiento'],
+            titulo: "🍆 Cocina Mediterránea de Huerta",
+            contenido: `
+                • <strong>Pisto casero sin azúcar ni sal:</strong> Cocina a fuego lento calabacín, berenjena, pimiento rojo y verde, cebolla y tomate natural triturado (si el tomate está ácido, añade una pizca de zanahoria rallada en lugar de azúcar).<br>
+                • <strong>Berenjena asada al horno o microondas:</strong> Pártela por la mitad, hazle cortes en rombo, añade ajo picado, orégano y aceite de oliva. Ásala hasta que esté tierna y acompáñala con atún al natural bajo en sal.<br>
+                • <strong>Escalivada mediterránea:</strong> Pimientos rojos, berenjena y cebolla asados enteros y aliñados con buen aceite de oliva y ajo laminado.
+            `
+        },
+        {
+            claves: ['pescado', 'merluza', 'salmon', 'salmón', 'bacalao', 'sardina', 'caballa', 'dorada', 'sepia', 'calamar'],
+            titulo: "🐟 Pescados y Mariscos Aliados del Corazón",
+            contenido: `
+                • <strong>Pescado al papillote (jugoso y sin sal):</strong> Envuelve lomos de merluza, salmón o dorada en papel de horno con rodajas de tomate, cebolla fina, ajo, perejil y chorrito de limón. Hornea 10-12 min.<br>
+                • <strong>Pescado azul (sardinas, caballa, salmón):</strong> Rico en Omega-3 natural que ayuda a relajar las arterias. Hazlo a la plancha con ajo y perejil y acompáñalo de ensalada verde.<br>
+                • <strong>Sepia o calamar a la plancha:</strong> Con picada de ajo, perejil y zumo de limón, acompañado de verduras salteadas.
+            `
+        },
+        {
+            claves: ['pollo', 'pavo', 'carne', 'pechuga', 'filete', 'ternera'],
+            titulo: "🍗 Carnes Magras Jugosas sin Sal",
+            contenido: `
+                • <strong>Adobo mediterráneo exprés:</strong> Macera los filetes 10 minutos antes de cocinarlos con zumo de limón, ajo en polvo, orégano, pimienta negra y aceite de oliva.<br>
+                • <strong>Pollo al horno con hierbas:</strong> Muslos de pollo sin piel horneados con patata panadera, cebolla, tomillo, romero y un vaso de caldo de verduras casero sin sal.
+            `
+        },
+        {
+            claves: ['huevo', 'tortilla', 'revuelto'],
+            titulo: "🥚 Platos Rápidos con Huevo",
+            contenido: `
+                • <strong>Tortilla jugosa de calabacín y cebolla:</strong> Haz el calabacín y la cebolla tapados en sartén con una cucharada de aceite (así sueltan su agua y no necesitan fritura ni sal) y cuaja con 2 huevos batidos.<br>
+                • <strong>Huevos al plato sobre pisto:</strong> Calienta pisto de verduras en una cazuelita, casca 1 o 2 huevos encima y tápalos 3 minutos hasta que cuaje la clara.
+            `
+        },
+        {
+            claves: ['cansada', 'aire', 'fatiga', 'escalera', 'pesada', 'tension', 'tensión'],
+            titulo: "😮‍💨 Cuidado Suave en Días de Cansancio",
+            contenido: `
+                • <strong>No te exijas hoy:</strong> Si notas falta de aire o pesadez, siéntate cómoda con la espalda bien apoyada y respira lento (4 segundos tomando aire por la nariz, 6 segundos soltándolo por la boca) durante 2 minutos.<br>
+                • <strong>Comida ligera para no robar energía:</strong> Elige cremas de verduras templadas, caldos caseros sin sal, pescado blanco o tortilla francesa, que se digieren muy fácil y evitan la somnolencia y la pesadez abdominal.
+            `
+        },
+        {
+            claves: ['rapida', 'rápida', '5 min', 'prisa', 'cena'],
+            titulo: "⏱️ Soluciones Saludables en 5 Minutos",
+            contenido: `
+                • <strong>Ensalada templada de garbanzos:</strong> Medio bote de garbanzos lavados bajo el grifo + tomate troceado + pepino + atún al natural bajo en sal + aceite de oliva y comino.<br>
+                • <strong>Crema rápida + proteína:</strong> Un vaso de crema de verduras natural (sin sal añadida) + 1 huevo duro o tortilla de 1 huevo.<br>
+                • <strong>Tostada mediterránea completa:</strong> Pan integral sin sal con aguacate machacado, gotas de limón y un poco de pavo natural bajo en sal.
+            `
+        }
+    ];
+
+    function handleCustomAI() {
+        const input = document.getElementById('aiInput').value.trim();
+        if (!input) {
+            showToast('Escribe un ingrediente o plato para consultar', '✨');
+            return;
+        }
+        askAI(input);
+    }
+
+    function askAI(promptText) {
+        const box = document.getElementById('aiResponseBox');
+        const out = document.getElementById('aiResponseText');
+        const q = promptText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        let coincidencias = [];
+
+        diccionarioIA.forEach(categoria => {
+            const match = categoria.claves.some(clave => {
+                const claveNorm = clave.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                return q.includes(claveNorm);
+            });
+            if (match) {
+                coincidencias.push(`<div style="margin-bottom:8px;"><strong>${categoria.titulo}</strong><br>${categoria.contenido}</div>`);
+            }
+        });
+
+        if (coincidencias.length > 0) {
+            out.innerHTML = coincidencias.join('<hr style="border:0; border-top:1px solid var(--border); margin:10px 0;">');
+        } else {
+            out.innerHTML = `
+                <strong>Idea mediterránea con "${promptText}":</strong><br>
+                • <strong>Preparación base sin sal:</strong> Cocina esos ingredientes a la plancha, al horno o estofados con cebolla, ajo, tomate natural y aceite de oliva virgen extra.<br>
+                • <strong>Toque de sabor:</strong> Sustituye la sal por limón exprimido, pimentón dulce, comino, pimienta negra o hierbas mediterráneas (orégano, tomillo, laurel).<br>
+                • <strong>Equilibrio saciante:</strong> Acompaña siempre con una ración generosa de verdura o ensalada para llenar el estómago sin añadir calorías ni subir la tensión.
+            `;
+        }
+
+        box.style.display = 'block';
+    }
+
+    function updateSmartCoach() {
+        const todayData = getTodayData();
+        const textEl = document.getElementById('smartCoachText');
+
+        if (appState.bpHistory && appState.bpHistory.length > 0 && parseInt(appState.bpHistory[0].sys) >= 140) {
+            textEl.innerText = `La última tensión registrada fue ${appState.bpHistory[0].sys}/${appState.bpHistory[0].dia} mmHg. Hoy prioriza beber agua despacio, evitar cualquier envasado con sal y hacer 2 minutos de respiración guiada.`;
+            return;
+        }
+        if (todayData.water < 750) {
+            textEl.innerText = "Beber un vaso grande de agua antes de comer ayuda a sentir saciedad antes y facilita que el riñón elimine el exceso de sodio.";
+            return;
+        }
+        textEl.innerText = "¡Cada comida casera sin sal ni azúcar añadido ayuda a estabilizar la tensión arterial de forma natural! No hace falta hacerlo perfecto, solo ir paso a paso.";
+    }
+
+    async function saveState() {
+        await dbSet('appState', appState);
+        updateAllUI();
+    }
+
+    function applyTheme() {
+        if (appState.theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            document.getElementById('themeBtn').innerText = '☀️';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            document.getElementById('themeBtn').innerText = '🌙';
+        }
+    }
+
+    function toggleTheme() {
+        appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+        applyTheme();
+        saveState();
+    }
+
+    function checkStreak() {
+        const last = new Date(appState.streak.lastDate);
+        const today = new Date();
+        const diffDays = Math.floor((today - last) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+            appState.streak.count += 1;
+            appState.streak.lastDate = today.toDateString();
+        } else if (diffDays > 1) {
+            appState.streak.count = 1;
+            appState.streak.lastDate = today.toDateString();
+        }
+        document.getElementById('streakDisplay').innerText = appState.streak.count;
+    }
+
+    function openTab(tabId) {
+        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(`'${tabId}'`));
+        if (activeBtn) activeBtn.classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function updateAllUI() {
+        const todayData = getTodayData();
+        const profileConfig = PROFILE_CONFIGS[appState.user.profile] || PROFILE_CONFIGS.hogar;
+        const dietPlan = DIET_PLANS[appState.user.diet] || DIET_PLANS.sinsalazucar;
+
+        document.getElementById('currentProfileName').innerText = `${profileConfig.icon} ${profileConfig.name}`;
+        document.getElementById('currentDietName').innerText = dietPlan.name;
+        document.getElementById('streakDisplay').innerText = appState.streak.count || 1;
+
+        const isChallengeDone = todayData.challengeDone;
+        document.getElementById('challengeIcon').innerText = isChallengeDone ? '✅' : '⚪';
+        document.getElementById('challengeBtn').className = isChallengeDone ? 'btn btn-accent' : 'btn btn-outline';
+
+        document.getElementById('waterMlDisplay').innerText = `${todayData.water} / 2000 mL`;
+        document.getElementById('waterProgressBar').style.width = Math.min((todayData.water / 2000) * 100, 100) + '%';
+
+        const snackMsg = todayData.lastSnackTime ? new Date(todayData.lastSnackTime).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : "Ninguno hoy";
+        document.getElementById('snackTimeText').innerText = `Último snack registrado: ${snackMsg}`;
+
+        document.getElementById('dietTypeSelector').value = appState.user.diet;
+        document.getElementById('profileDietTip').innerText = profileConfig.dietTip;
+        renderDietMenu(dietPlan, todayData);
+
+        document.getElementById('fitnessProfileTitle').innerText = `🪑 Movilidad: ${profileConfig.name}`;
+        document.getElementById('ergonomicsSummary').innerText = profileConfig.ergonomics;
+        renderFitnessRoutine(profileConfig, todayData);
+
+        document.getElementById('progWeightCurrent').innerText = appState.user.currentWeight > 0 ? appState.user.currentWeight.toFixed(1) : '--';
+        document.getElementById('progWeightTarget').innerText = appState.user.targetWeight > 0 ? appState.user.targetWeight.toFixed(1) : '--';
+
+        if (todayData.sleepHours) document.getElementById('sleepHoursInput').value = todayData.sleepHours;
+        if (todayData.sleepQuality) document.getElementById('sleepQualityInput').value = todayData.sleepQuality;
+        updateSleepAdvice(todayData.sleepHours, todayData.sleepQuality);
+
+        updateGlobalTaskProgress(todayData, dietPlan.menu.length, profileConfig.exercises.length);
+        updateSmartCoach();
+        renderHistoryLogs();
+    }
+
+    function renderDietMenu(dietPlan, todayData) {
+        const container = document.getElementById('dietMenuContainer');
+        container.innerHTML = dietPlan.menu.map((item, idx) => {
+            const taskId = `diet_${idx}`;
+            const checked = !!todayData.completedTasks[taskId];
+            return `
+            <div class="item">
+                <label class="checkbox-container ${checked ? 'done' : ''}">
+                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleTask('${taskId}')">
+                    <div style="display:flex; flex-direction:column;">
+                        <small style="color:var(--accent); font-weight:bold; font-size:0.7rem;">${item.label}</small>
+                        <span style="font-weight:500;">${item.text}</span>
+                    </div>
+                </label>
+            </div>`;
+        }).join('');
+    }
+
+    function renderFitnessRoutine(profileConfig, todayData) {
+        const container = document.getElementById('fitnessRoutineContainer');
+        container.innerHTML = profileConfig.exercises.map((item, idx) => {
+            const taskId = `fit_${idx}`;
+            const checked = !!todayData.completedTasks[taskId];
+            return `
+            <div class="item orange-border">
+                <label class="checkbox-container ${checked ? 'done' : ''}">
+                    <input type="checkbox" ${checked ? 'checked' : ''} onchange="toggleTask('${taskId}')">
+                    <span style="font-weight:500;">${item}</span>
+                </label>
+            </div>`;
+        }).join('');
+    }
+
+    function toggleTask(taskId) {
+        const todayData = getTodayData();
+        todayData.completedTasks[taskId] = !todayData.completedTasks[taskId];
+        saveState();
+    }
+
+    function updateGlobalTaskProgress(todayData, totalDiet, totalFit) {
+        const total = totalDiet + totalFit + 1;
+        let completed = 0;
+
+        for (let key in todayData.completedTasks) {
+            if (todayData.completedTasks[key]) completed++;
+        }
+        if (todayData.water >= 2000) completed++;
+
+        const percent = Math.min((completed / total) * 100, 100);
+        document.getElementById('mainProgressBar').style.width = percent + '%';
+        document.getElementById('completedTaskBadge').innerText = `${completed}/${total}`;
+        document.getElementById('mainProgressSummary').innerText = `${completed} de ${total} pequeños pasos completados hoy`;
+    }
+
+    function addWater() {
+        const todayData = getTodayData();
+        todayData.water += 250;
+        showToast("¡+250 mL de agua registrados!", "💧");
+        saveState();
+    }
+
+    function resetWater() {
+        const todayData = getTodayData();
+        todayData.water = 0;
+        showToast("Contador de agua reiniciado.", "🔄");
+        saveState();
+    }
+
+    function logSnack() {
+        const todayData = getTodayData();
+        todayData.snackImpulses += 1;
+        todayData.lastSnackTime = Date.now();
+        document.getElementById('snackAlertBanner').style.display = 'flex';
+        showToast("Snack registrado. ¡Buena elección sin azúcar!", "🍏");
+        saveState();
+    }
+
+    function toggleChallenge() {
+        const todayData = getTodayData();
+        todayData.challengeDone = !todayData.challengeDone;
+        showToast(todayData.challengeDone ? "¡Día logrado sin sal ni azúcar añadido!" : "Marcador actualizado.", "❤️");
+        saveState();
+    }
+
+    function changeDietFilter(newDiet) {
+        appState.user.diet = newDiet;
+        showToast("Plan nutricional actualizado.", "🥗");
+        saveState();
+    }
+
+    function triggerSOSRelief() {
+        const profileConfig = PROFILE_CONFIGS[appState.user.profile] || PROFILE_CONFIGS.hogar;
+        document.getElementById('sosModalContent').innerText = profileConfig.sos;
+        document.getElementById('sosModal').classList.add('active');
+    }
+
+    function closeSosModal() {
+        document.getElementById('sosModal').classList.remove('active');
+    }
+
+    function toggleMinViableMode() {
+        isMinViableMode = !isMinViableMode;
+        const banner = document.getElementById('minViableBanner');
+        const btn = document.getElementById('minViableBtn');
+        if (isMinViableMode) {
+            banner.style.display = 'block';
+            btn.style.background = 'var(--danger)';
+            btn.innerText = '⚡ Modo 10% (ACTIVO)';
+            showToast("Modo suave activado para hoy.", "🛡️");
+        } else {
+            banner.style.display = 'none';
+            btn.style.background = 'var(--orange)';
+            btn.innerText = '⚡ Modo 10%';
+            showToast("Modo habitual activado.", "🏡");
+        }
+    }
+
+    function openTutorialModal() { document.getElementById('tutorialModal').classList.add('active'); }
+    function closeTutorialModal() {
+        appState.tutorialSeen = true;
+        document.getElementById('tutorialModal').classList.remove('active');
+        saveState();
+    }
+
+    function openRainModal() {
+        currentRainStepIndex = 0;
+        updateRainStepUI();
+        document.getElementById('rainModal').classList.add('active');
+        startRainTimer();
+    }
+
+    function closeRainModal() {
+        clearInterval(rainTimerInterval);
+        document.getElementById('rainModal').classList.remove('active');
+    }
+
+    function updateRainStepUI() {
+        const step = rainSteps[currentRainStepIndex];
+        document.getElementById('rainStepTitle').innerText = step.title;
+        document.getElementById('rainStepDesc').innerText = step.desc;
+    }
+
+    function nextRainStep() {
+        currentRainStepIndex = (currentRainStepIndex + 1) % rainSteps.length;
+        updateRainStepUI();
+    }
+
+    function startRainTimer() {
+        clearInterval(rainTimerInterval);
+        rainTimerSeconds = 300;
+        rainTimerInterval = setInterval(() => {
+            rainTimerSeconds--;
+            const m = Math.floor(rainTimerSeconds / 60).toString().padStart(2, '0');
+            const s = (rainTimerSeconds % 60).toString().padStart(2, '0');
+            document.getElementById('rainTimerDisplay').innerText = `${m}:${s}`;
+            if (rainTimerSeconds <= 0) {
+                clearInterval(rainTimerInterval);
+                document.getElementById('rainTimerDisplay').innerText = "00:00 - ¡Ansiedad superada!";
+            }
+        }, 1000);
+    }
+
+    function openPlateModal() { document.getElementById('plateModal').classList.add('active'); }
+    function closePlateModal() { document.getElementById('plateModal').classList.remove('active'); }
+
+    function openEmergencyMenuModal() { document.getElementById('emergencyMenuModal').classList.add('active'); }
+    function closeEmergencyMenuModal() { document.getElementById('emergencyMenuModal').classList.remove('active'); }
+
+    function openSocialTipsModal() { document.getElementById('socialTipsModal').classList.add('active'); }
+    function closeSocialTipsModal() { document.getElementById('socialTipsModal').classList.remove('active'); }
+
+    function openMindfulEatModal() { document.getElementById('mindfulEatModal').classList.add('active'); }
+    function closeMindfulEatModal() { 
+        clearInterval(mindfulEatInterval);
+        mindfulEatRunning = false;
+        document.getElementById('mindfulEatModal').classList.remove('active'); 
+    }
+
+    function toggleMindfulTimer() {
+        const btn = document.getElementById('mindfulStartBtn');
+        const phaseEl = document.getElementById('mindfulPhaseText');
+
+        if (mindfulEatRunning) {
+            clearInterval(mindfulEatInterval);
+            mindfulEatRunning = false;
+            btn.innerText = "Reanudar Comida";
+        } else {
+            mindfulEatRunning = true;
+            btn.innerText = "Pausar Cronómetro";
+            mindfulEatInterval = setInterval(() => {
+                mindfulEatSeconds--;
+                const m = Math.floor(mindfulEatSeconds / 60).toString().padStart(2, '0');
+                const s = (mindfulEatSeconds % 60).toString().padStart(2, '0');
+                document.getElementById('mindfulTimerDisplay').innerText = `${m}:${s}`;
+
+                if (mindfulEatSeconds > 900) {
+                    phaseEl.innerText = "🟢 Primeros bocados: Mastica despacio y disfruta el sabor natural.";
+                } else if (mindfulEatSeconds > 300) {
+                    phaseEl.innerText = "🟡 Mitad de la comida: Bebe un sorbo de agua y escucha si ya estás satisfecha.";
+                } else if (mindfulEatSeconds > 0) {
+                    phaseEl.innerText = "🔵 Fase final: Tu cerebro está recibiendo las señales naturales de saciedad.";
+                } else {
+                    clearInterval(mindfulEatInterval);
+                    mindfulEatRunning = false;
+                    document.getElementById('mindfulTimerDisplay').innerText = "20:00";
+                    phaseEl.innerText = "✨ ¡20 minutos completados!";
+                    btn.innerText = "Iniciar Comida";
+                }
+            }, 1000);
+        }
+    }
+
+    function openProfileModal() {
+        document.getElementById('userNameInput').value = appState.user.name || '';
+        document.getElementById('userProfileSelector').value = appState.user.profile || 'hogar';
+        document.getElementById('userCurrentWeightInput').value = appState.user.currentWeight || '';
+        document.getElementById('userTargetWeightInput').value = appState.user.targetWeight || '';
+        document.getElementById('profileModal').classList.add('active');
+    }
+
+    function saveProfileModal() {
+        appState.user.name = document.getElementById('userNameInput').value || 'Hogar Saludable';
+        appState.user.profile = document.getElementById('userProfileSelector').value;
+        appState.user.currentWeight = parseFloat(document.getElementById('userCurrentWeightInput').value) || 0;
+        appState.user.targetWeight = parseFloat(document.getElementById('userTargetWeightInput').value) || 0;
+
+        document.getElementById('profileModal').classList.remove('active');
+        showToast("Ajustes familiares guardados.", "🏡");
+        saveState();
+    }
+
+    function openGroceryModal() {
+        const dietPlan = DIET_PLANS[appState.user.diet] || DIET_PLANS.sinsalazucar;
+        const container = document.getElementById('groceryItemsList');
+        container.innerHTML = dietPlan.grocery.map(item => `
+            <div class="grocery-item">
+                <input type="checkbox" style="width:18px; height:18px; margin:0; accent-color:var(--accent);">
+                <span>${item}</span>
+            </div>
+        `).join('');
+        document.getElementById('groceryModal').classList.add('active');
+    }
+
+    function closeGroceryModal() {
+        document.getElementById('groceryModal').classList.remove('active');
+    }
+
+    function toggleActivePauseTimer() {
+        if (pauseTimerRunning) {
+            clearInterval(pauseTimerInterval);
+            pauseTimerRunning = false;
+            document.getElementById('timerStartBtn').innerText = "Reanudar";
+        } else {
+            pauseTimerRunning = true;
+            document.getElementById('timerStartBtn').innerText = "Pausar";
+            pauseTimerInterval = setInterval(() => {
+                pauseTimerSeconds--;
+                updateActivePauseTimerDisplay();
+                if (pauseTimerSeconds <= 0) {
+                    clearInterval(pauseTimerInterval);
+                    pauseTimerRunning = false;
+                    showToast("⏰ ¡3 minutos completados! Muy bien hecho.", "🎉");
+                    resetActivePauseTimer();
+                }
+            }, 1000);
+        }
+    }
+
+    function resetActivePauseTimer() {
+        clearInterval(pauseTimerInterval);
+        pauseTimerRunning = false;
+        pauseTimerSeconds = 180;
+        updateActivePauseTimerDisplay();
+        document.getElementById('timerStartBtn').innerText = "Iniciar 3 Minutos";
+    }
+
+    function updateActivePauseTimerDisplay() {
+        const m = Math.floor(pauseTimerSeconds / 60).toString().padStart(2, '0');
+        const s = (pauseTimerSeconds % 60).toString().padStart(2, '0');
+        document.getElementById('activePauseTimerDisplay').innerText = `${m}:${s}`;
+    }
+
+    function toggleBreathing() {
+        const box = document.getElementById('breathingBox');
+        const phaseEl = document.getElementById('breathingPhase');
+        const countEl = document.getElementById('breathingCount');
+        const btn = document.getElementById('breathingStartBtn');
+
+        if (breathingRunning) {
+            clearInterval(breathingInterval);
+            breathingRunning = false;
+            box.className = 'breathing-box';
+            phaseEl.innerText = "Detenido";
+            countEl.innerText = "4";
+            btn.innerText = "Iniciar Respiración Guiada";
+        } else {
+            breathingRunning = true;
+            btn.innerText = "Detener Ejercicio";
+            
+            const phases = [
+                { name: "Toma aire", class: "expand" },
+                { name: "Mantén", class: "hold" },
+                { name: "Suelta suave", class: "contract" },
+                { name: "Descansa", class: "contract" }
+            ];
+
+            let stepIndex = 0;
+            let counter = 4;
+
+            phaseEl.innerText = phases[0].name;
+            box.className = `breathing-box ${phases[0].class}`;
+
+            breathingInterval = setInterval(() => {
+                counter--;
+                countEl.innerText = counter;
+
+                if (counter <= 0) {
+                    counter = 4;
+                    stepIndex = (stepIndex + 1) % phases.length;
+                    phaseEl.innerText = phases[stepIndex].name;
+                    box.className = `breathing-box ${phases[stepIndex].class}`;
+                }
+            }, 1000);
+        }
+    }
+
+    function saveSleepData() {
+        const todayData = getTodayData();
+        todayData.sleepHours = parseFloat(document.getElementById('sleepHoursInput').value) || 7;
+        todayData.sleepQuality = document.getElementById('sleepQualityInput').value;
+        showToast("Descanso actualizado.", "🌙");
+        saveState();
+    }
+
+    function updateSleepAdvice(hours, quality) {
+        const adviceEl = document.getElementById('sleepAdviceText');
+        if (hours < 6) {
+            adviceEl.innerText = "⚠️ Dormir poco aumenta las ganas de dulce al día siguiente. Hoy prioriza hidratarte y cenar ligero temprano.";
+        } else if (quality === 'excelente') {
+            adviceEl.innerText = "✨ ¡Buen descanso! Dormir bien ayuda a regular de forma natural la tensión arterial y el apetito.";
+        } else {
+            adviceEl.innerText = "💡 Evita cenas pesadas o con sal por la noche para descansar mejor y no retener líquidos.";
+        }
+    }
+
+    function saveNewBP() {
+        const sys = parseInt(document.getElementById('bpSysInput').value);
+        const dia = parseInt(document.getElementById('bpDiaInput').value);
+        if (isNaN(sys) || isNaN(dia) || sys < 60 || dia < 30) {
+            showToast("Introduce una tensión alta y baja válidas.", "🩺");
+            return;
+        }
+        if (!appState.bpHistory) appState.bpHistory = [];
+        appState.bpHistory.unshift({
+            date: new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
+            sys,
+            dia
+        });
+        document.getElementById('bpSysInput').value = '';
+        document.getElementById('bpDiaInput').value = '';
+        showToast("✅ Toma de tensión guardada para el médico.", "🩺");
+        saveState();
+    }
+
+    function saveNewWeight() {
+        const val = parseFloat(document.getElementById('newWeightInput').value);
+        if (!isNaN(val) && val > 30 && val < 300) {
+            appState.user.currentWeight = val;
+            appState.weightHistory.unshift({
+                date: new Date().toLocaleDateString('es-ES'),
+                weight: val
+            });
+            document.getElementById('newWeightInput').value = '';
+            showToast("✅ Registro de peso actualizado.", "📉");
+            saveState();
+        }
+    }
+
+    function renderHistoryLogs() {
+        const bpContainer = document.getElementById('bpHistoryList');
+        if (!appState.bpHistory || appState.bpHistory.length === 0) {
+            bpContainer.innerHTML = "<p style='font-size:0.82rem; color:var(--subtext);'>Aún no hay tomas de tensión registradas.</p>";
+        } else {
+            bpContainer.innerHTML = appState.bpHistory.slice(0, 6).map(item => `
+                <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--border); font-size:0.85rem;">
+                    <span>🩺 ${item.date}</span>
+                    <strong>${item.sys} / ${item.dia} mmHg</strong>
+                </div>
+            `).join('');
+        }
+
+        const container = document.getElementById('historyLogsList');
+        if (!appState.weightHistory || appState.weightHistory.length === 0) {
+            container.innerHTML = "<p style='font-size:0.82rem; color:var(--subtext);'>Sin registros de peso aún.</p>";
+        } else {
+            container.innerHTML = appState.weightHistory.slice(0, 5).map(item => `
+                <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--border); font-size:0.85rem;">
+                    <span>📅 ${item.date}</span>
+                    <strong>${item.weight.toFixed(1)} kg</strong>
+                </div>
+            `).join('');
+        }
+    }
+
+    function exportDataJSON() {
+        const jsonStr = JSON.stringify(appState, null, 2);
+        const blob = new Blob([jsonStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `vida_saludable_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("Copia de seguridad descargada.", "📥");
+    }
+
+    function importDataJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const imported = JSON.parse(e.target.result);
+                if (imported && typeof imported === 'object') {
+                    appState = imported;
+                    saveState();
+                    applyTheme();
+                    showToast("Datos restaurados correctamente.", "✅");
+                }
+            } catch (err) {
+                showToast("El archivo no es válido.", "❌");
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    async function initApp() {
+        if ('storage' in navigator && 'persist' in navigator.storage) {
+            navigator.storage.persist();
+        }
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(()=>{});
+        }
+
+        await openDatabase();
+        const saved = await dbGet('appState');
+        if (saved) {
+            appState = { ...appState, ...saved };
+        }
+
+        if (!appState.tutorialSeen) {
+            openTutorialModal();
+        }
+
+        showTrafficZone('green');
+        applyTheme();
+        checkStreak();
+        updateAllUI();
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+</script>
+</body>
+</html>
